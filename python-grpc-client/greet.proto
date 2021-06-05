@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.swimming.grpc.generated";
+option java_multiple_files = true;
+
+service GreetService {
+  rpc Hello (GreetRequest) returns (GreetResponse) {}
+  rpc Bye (GreetRequest) returns (GreetResponse) {}
+}
+
+message GreetRequest {
+  string name = 1;
+  string msg = 2;
+}
+
+message GreetResponse {
+  string reply = 1;
+}

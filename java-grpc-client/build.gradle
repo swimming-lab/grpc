@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.8.16'
+}
+
+apply plugin: 'com.google.protobuf'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+def grpcVersion = '1.37.1'
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.18'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // grpc
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+
+    // @Generated Annotation
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
+    annotationProcessor "javax.annotation:javax.annotation-api:1.3.2"
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.5.1"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.37.0"
+        }
+    }
+    generateProtoTasks {
+        ofSourceSet('main').each { task ->
+            task.builtins {
+                java {
+                    outputSubDir = 'java'
+                }
+            }
+            task.plugins {
+                grpc {
+                    outputSubDir = 'java'
+                }
+            }
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/src/"
+}
